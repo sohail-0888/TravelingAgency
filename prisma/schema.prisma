@@ -15,14 +15,18 @@ model User {
   name         String
   email        String    @unique
   password     String    // store hashed password only
+  phoneNumber  String?   // optional, user ka phone
+  address      String?   // optional
+  cnic         String?   // optional, Pakistani CNIC format
+  postalCode   String?   // optional
   role         Role      @default(CUSTOMER)
-  isActive     Boolean   @default(true)   // deactivate user if needed
+  isActive     Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
   bookings     Booking[]
   reviews      Review[]
-  createdTrips Trip[]    // Trips created by Admin
+  createdTrips Trip[]
 }
 
 // Enum for user roles
@@ -30,6 +34,7 @@ enum Role {
   ADMIN
   CUSTOMER
 }
+
 
 // -------------------------
 // Trip Model
@@ -118,4 +123,41 @@ model Review {
   user User @relation(fields: [userId], references: [id])
 
   @@unique([userId, tripId]) // Ek user sirf ek trip ka review de sakta
+}
+
+
+// -------------------------
+// Hotel Model
+// -------------------------
+model Hotel {
+  id            Int       @id @default(autoincrement())
+  name          String
+  slug          String    @unique
+  description   String
+  location      String
+  pricePerNight Float
+  roomsAvailable Int
+  amenities     String[]  // e.g., ["Wifi", "Parking", "Qibla Direction"]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bookings      HotelBooking[] // Relation to hotel bookings
+}
+
+// -------------------------
+// HotelBooking Model
+// -------------------------
+model HotelBooking {
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  hotel     Hotel     @relation(fields: [hotelId], references: [id])
+  hotelId   Int
+  roomType  String
+  guests    Int
+  checkIn   DateTime
+  checkOut  DateTime
+  status    BookingStatus @default(PENDING)
+  bookedAt  DateTime @default(now())
+  payment   Payment?  // Optional relation if payment exists
 }

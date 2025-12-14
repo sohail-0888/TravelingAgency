@@ -17,13 +17,15 @@ const bookingRoutes = require("./routers/bookingRoute");
 const paymentRouter = require('./routers/paymentRoutes');
 const reveiwRouter = require('./routers/ReveiwRouters')
 const userRouter = require('./routers/URouters')
+const hotelRouter = require('./routers/hotelRouter')
 
 app.use('/api/auth', userRoutes);
 app.use('/api/trips', tripRouter);
 app.use("/api/b", bookingRoutes);
 app.use('/api/pay',paymentRouter);
 app.use('/api/r',reveiwRouter);
-app.use('/api/user',userRouter)
+app.use('/api/user',userRouter);
+app.use('/api/hotel',hotelRouter);
 
 
 

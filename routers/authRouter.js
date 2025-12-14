@@ -3,17 +3,18 @@ const router = express.Router();
 const {
   registerUser,
   loginUser,
-  getAllUsers,
-  getUserById,
-  updateUser,
-  deleteUser
+ 
 } = require('../controllers/authController');
 
+const {getAllUsers,getUserById,updateUser,deleteUser}  = require('../controllers/userController')
+
 const { protect, admin } = require('../middlewares/authmiddleware');
+const { registerSchema, loginSchema } = require('../validation/authvalidation');
+const validate = require('../middlewares/validatemiddleware');
 
 // Public
-router.post('/register', registerUser);
-router.post('/login', loginUser);
+router.post('/register', validate(registerSchema), registerUser);
+router.post('/login', validate(loginSchema), loginUser);
 
 // Admin-only routes
 router.get('/', protect, admin, getAllUsers);
